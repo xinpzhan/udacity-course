@@ -89,7 +89,7 @@ class _CategoryRouteState extends State<CategoryRoute> {
     final json = DefaultAssetBundle
         .of(context)
         .loadString('assets/data/regular_units.json');
-    final data = JsonDecoder().convert(await json);
+    final data = JsonDecoder().convert(_getStringFromBytes(await json));
     if (data is! Map) {
       throw ('Data retrieved from API is not a Map');
     }
@@ -112,6 +112,13 @@ class _CategoryRouteState extends State<CategoryRoute> {
       });
       categoryIndex += 1;
     });
+  }
+  
+  /// Function to convert ByteData to String
+  String _getStringFromBytes(ByteData data) {
+    final buffer = data.buffer;
+    var list = buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    return utf8.decode(list);
   }
 
   /// Function to call when a [Category] is tapped.
